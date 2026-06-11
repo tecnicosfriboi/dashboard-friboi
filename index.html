@@ -108,6 +108,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .cell-ok,.cell-no,.cell-na{display:inline-flex;align-items:center;justify-content:center;font-size:11px;padding:3px 8px;border-radius:4px;width:100%;font-family:'DM Mono',monospace;cursor:pointer;transition:opacity .15s}
 .cell-ok:hover,.cell-no:hover,.cell-na:hover{opacity:.75}
 .cell-ok{background:#e8eef8;color:var(--navy)}
+.ck-sel{border-color:var(--navy) !important;box-shadow:0 0 0 2px rgba(15,32,68,0.2)}
 .cell-no{background:var(--red-bg);color:var(--red-text)}
 .cell-na{background:var(--surface2);color:var(--text3)}
 .month-col{text-align:center}
@@ -295,7 +296,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       <!-- CHECKLIST -->
       <div id="sec-checklist" class="section">
         <div class="sec-header">
-          <div><div class="sec-title">Checklist de Atividades Mensais</div><div class="sec-sub">Clique em qualquer célula para editar</div></div>
+          <div><div class="sec-title">Checklist de Atividades Mensais</div><div class="sec-sub">Clique em qualquer célula para editar · arraste para reordenar</div></div>
+          <button class="add-btn" onclick="document.getElementById('modal-add-ck').classList.add('open')">+ nova linha</button>
         </div>
         <div class="checklist-wrap"><table class="checklist-table" id="checklist-table"></table></div>
       </div>
@@ -506,13 +508,14 @@ async function fbLoad(key) {
 // ── DADOS BASE ──
 const DEFAULT_EVENTS = [{"cidade": "São Paulo", "cliente": "Giga", "date": "2026-01-12", "done": true, "estado": "SP", "followup": false, "followupDate": "", "id": "e1", "modalidade": "presencial", "obs": "Análise de reimplantação do projeto.", "subtipo": "implantacao", "text": "Reunião cliente Giga – reimplantação", "type": "reuniao_cliente"}, {"cidade": "", "cliente": "", "date": "2026-01-13", "done": true, "estado": "", "followup": false, "followupDate": "", "id": "e2", "modalidade": "presencial", "obs": "", "subtipo": "", "text": "Reunião DSP – alinhamento retiradas (CDs, CRM, Trade, Logística)", "type": "reuniao"}, {"cidade": "Florianópolis", "cliente": "Atacadão", "date": "2026-01-27", "done": true, "estado": "SC", "followup": false, "followupDate": "", "id": "e3", "modalidade": "presencial", "obs": "", "subtipo": "", "text": "Acomp. evolução Atacadão SC", "type": "acompanhamento"}, {"cidade": "", "cliente": "", "date": "2026-01-28", "done": true, "estado": "", "followup": false, "followupDate": "", "id": "e4", "modalidade": "presencial", "obs": "", "subtipo": "", "text": "Reunião comercial – avaliação implantação Fort Atacadista", "type": "reuniao"}, {"cidade": "", "cliente": "", "date": "2026-02-05", "done": true, "estado": "", "followup": false, "followupDate": "", "id": "e5", "modalidade": "", "obs": "", "subtipo": "", "text": "Consolidação dossiês visitas Jan", "type": "entrega"}, {"cidade": "", "cliente": "", "date": "2026-02-06", "done": true, "estado": "", "followup": false, "followupDate": "", "id": "e6", "modalidade": "", "obs": "", "subtipo": "", "text": "Atualização painéis", "type": "entrega"}, {"cidade": "Cuiabá", "cliente": "(cliente MT)", "date": "2026-02-23", "done": true, "estado": "MT", "followup": false, "followupDate": "", "id": "e7", "modalidade": "presencial", "obs": "", "subtipo": "", "text": "Acomp. evolução projeto MT", "type": "acompanhamento"}, {"cidade": "Cuiabá", "cliente": "(cliente MT)", "date": "2026-02-24", "done": true, "estado": "MT", "followup": false, "followupDate": "", "id": "e8", "modalidade": "presencial", "obs": "", "subtipo": "", "text": "Acomp. evolução projeto MT", "type": "acompanhamento"}, {"cidade": "Cuiabá", "cliente": "(cliente MT)", "date": "2026-02-25", "done": true, "estado": "MT", "followup": false, "followupDate": "", "id": "e9", "modalidade": "presencial", "obs": "", "subtipo": "", "text": "Acomp. evolução projeto MT", "type": "acompanhamento"}, {"cidade": "Cuiabá", "cliente": "(cliente MT)", "date": "2026-02-26", "done": true, "estado": "MT", "followup": false, "followupDate": "", "id": "e10", "modalidade": "presencial", "obs": "", "subtipo": "", "text": "Acomp. evolução projeto MT", "type": "acompanhamento"}, {"cidade": "Cuiabá", "cliente": "(cliente MT)", "date": "2026-02-27", "done": true, "estado": "MT", "followup": false, "followupDate": "", "id": "e11", "modalidade": "presencial", "obs": "", "subtipo": "", "text": "Acomp. evolução projeto MT", "type": "acompanhamento"}, {"cidade": "", "cliente": "", "date": "2026-03-06", "done": true, "estado": "", "followup": false, "followupDate": "", "id": "e12", "modalidade": "presencial", "obs": "", "subtipo": "", "text": "Alinhamento comercial / logística / trade / GQ", "type": "reuniao"}, {"cidade": "", "cliente": "", "date": "2026-03-10", "done": true, "estado": "", "followup": false, "followupDate": "", "id": "e14", "modalidade": "", "obs": "", "subtipo": "", "text": "Atualização painéis", "type": "entrega"}, {"cidade": "", "cliente": "", "date": "2026-03-11", "done": true, "estado": "", "followup": false, "followupDate": "", "id": "e15", "modalidade": "presencial", "obs": "", "subtipo": "", "text": "Reunião Anual da Qualidade", "type": "interno"}, {"cidade": "", "cliente": "", "date": "2026-03-12", "done": true, "estado": "", "followup": false, "followupDate": "", "id": "e16", "modalidade": "presencial", "obs": "", "subtipo": "", "text": "Reunião Anual da Qualidade", "type": "interno"}, {"cidade": "", "cliente": "", "date": "2026-03-13", "done": true, "estado": "", "followup": false, "followupDate": "", "id": "e17", "modalidade": "presencial", "obs": "", "subtipo": "", "text": "Reunião Anual da Qualidade", "type": "interno"}, {"cidade": "Brasília", "cliente": "Super Adega", "date": "2026-03-19", "done": true, "estado": "DF", "followup": false, "followupDate": "", "id": "e18", "modalidade": "online", "obs": "", "subtipo": "implantacao", "text": "Reunião análise implantação – Super Adega", "type": "reuniao_cliente"}, {"cidade": "", "cliente": "", "date": "2026-03-19", "done": true, "estado": "", "followup": false, "followupDate": "", "id": "e19", "modalidade": "presencial", "obs": "", "subtipo": "", "text": "Reunião APP (Marlon e Marcos)", "type": "reuniao"}, {"cidade": "", "cliente": "", "date": "2026-03-23", "done": true, "estado": "", "followup": false, "followupDate": "", "id": "e20", "modalidade": "online", "obs": "", "subtipo": "", "text": "Follow up – logística DSP", "type": "reuniao"}, {"cidade": "", "cliente": "", "date": "2026-03-25", "done": true, "estado": "", "followup": false, "followupDate": "", "id": "e21", "modalidade": "online", "obs": "", "subtipo": "", "text": "Alinhamento GQ e logística CD RJN", "type": "reuniao"}, {"cidade": "", "cliente": "", "date": "2026-03-31", "done": true, "estado": "", "followup": false, "followupDate": "", "id": "e22", "modalidade": "presencial", "obs": "", "subtipo": "", "text": "Reunião Atacado RJN", "type": "reuniao"}, {"cidade": "", "cliente": "", "date": "2026-04-07", "done": true, "estado": "", "followup": false, "followupDate": "", "id": "e23", "modalidade": "presencial", "obs": "", "subtipo": "", "text": "Follow up – App retiradas", "type": "reuniao"}, {"cidade": "", "cliente": "", "date": "2026-04-09", "done": true, "estado": "", "followup": false, "followupDate": "", "id": "e25", "modalidade": "", "obs": "", "subtipo": "", "text": "Atualização painéis", "type": "entrega"}, {"cidade": "", "cliente": "", "date": "2026-04-10", "done": true, "estado": "", "followup": false, "followupDate": "", "id": "e26", "modalidade": "presencial", "obs": "", "subtipo": "", "text": "Desenho do fluxo com TI – App retiradas", "type": "reuniao"}, {"date": "2026-04-20", "done": false, "followup": false, "followupDate": "", "id": "f1", "text": "Férias Laís", "type": "ferias"}, {"date": "2026-04-21", "done": false, "followup": false, "followupDate": "", "id": "f2", "text": "Férias Laís", "type": "ferias"}, {"date": "2026-04-22", "done": false, "followup": false, "followupDate": "", "id": "f3", "text": "Férias Laís", "type": "ferias"}, {"date": "2026-04-23", "done": false, "followup": false, "followupDate": "", "id": "f4", "text": "Férias Laís", "type": "ferias"}, {"date": "2026-04-24", "done": false, "followup": false, "followupDate": "", "id": "f5", "text": "Férias Laís", "type": "ferias"}, {"date": "2026-04-25", "done": false, "followup": false, "followupDate": "", "id": "f6", "text": "Férias Laís", "type": "ferias"}, {"date": "2026-04-26", "done": false, "followup": false, "followupDate": "", "id": "f7", "text": "Férias Laís", "type": "ferias"}, {"date": "2026-04-27", "done": false, "followup": false, "followupDate": "", "id": "f8", "text": "Férias Laís", "type": "ferias"}, {"date": "2026-04-28", "done": false, "followup": false, "followupDate": "", "id": "f9", "text": "Férias Laís", "type": "ferias"}, {"date": "2026-04-29", "done": false, "followup": false, "followupDate": "", "id": "f10", "text": "Férias Laís", "type": "ferias"}, {"date": "2026-04-30", "done": false, "followup": false, "followupDate": "", "id": "f11", "text": "Férias Laís", "type": "ferias"}, {"date": "2026-05-01", "done": false, "followup": false, "followupDate": "", "id": "f12", "text": "Férias Laís", "type": "ferias"}, {"date": "2026-05-02", "done": false, "followup": false, "followupDate": "", "id": "f13", "text": "Férias Laís", "type": "ferias"}, {"cidade": "", "cliente": "", "date": "2026-05-06", "done": true, "estado": "", "followup": false, "followupDate": "", "id": "x8ocq3m", "modalidade": "online", "obs": "", "subtipo": "", "text": "Validação Fluxo Retiradas (APP)", "type": "reuniao"}, {"cidade": "", "cliente": "", "date": "2026-05-28", "done": true, "estado": "", "followup": false, "followupDate": "", "id": "xy0igym", "modalidade": "online", "obs": "", "subtipo": "", "text": "Reunião Retiradas Nordeste (Marcos/Simone)", "type": "reuniao"}, {"cidade": "", "cliente": "", "date": "2026-06-03", "done": true, "estado": "", "followup": false, "followupDate": "", "id": "x5ldfrf", "modalidade": "online", "obs": "", "subtipo": "", "text": "Reciclagem Comercial", "type": "reuniao"}, {"cidade": "", "cliente": "", "date": "2026-06-22", "done": false, "estado": "MG", "followup": false, "followupDate": "", "id": "xswk4xm", "modalidade": "presencial", "obs": "", "subtipo": "", "text": "Acompanhamento em MG", "type": "acompanhamento"}, {"cidade": "", "cliente": "", "date": "2026-06-23", "done": false, "estado": "MG", "followup": false, "followupDate": "", "id": "xmi5d85", "modalidade": "presencial", "obs": "", "subtipo": "", "text": "Acompanhamento em MG", "type": "acompanhamento"}, {"cidade": "", "cliente": "", "date": "2026-06-24", "done": false, "estado": "MG", "followup": false, "followupDate": "", "id": "x15n3iy", "modalidade": "presencial", "obs": "", "subtipo": "", "text": "Acompanhamento em MG", "type": "acompanhamento"}, {"cidade": "", "cliente": "", "date": "2026-06-25", "done": false, "estado": "MG", "followup": false, "followupDate": "", "id": "xtletme", "modalidade": "presencial", "obs": "", "subtipo": "", "text": "Acompanhamento em MG", "type": "acompanhamento"}, {"cidade": "", "cliente": "", "date": "2026-06-26", "done": false, "estado": "MG", "followup": false, "followupDate": "", "id": "xm4ukjz", "modalidade": "presencial", "obs": "", "subtipo": "", "text": "Acompanhamento em MG", "type": "acompanhamento"}, {"cidade": "", "cliente": "Atacadão MS", "date": "2026-05-28", "done": true, "estado": "MS", "followup": false, "followupDate": "", "id": "xa0m8ar", "modalidade": "online", "obs": "", "subtipo": "implantacao", "text": "Reunião com Operacional Atacadão –", "type": "reuniao_cliente"}];
 const DEFAULT_INI = [{"desc": "Avaliação e implantação do projeto na rede Fort Atacadista.", "id": "i1", "name": "Implantação Fort Atacadista", "status": "done"}, {"desc": "Análise e retomada do projeto com o cliente Giga — reunião realizada em jan/26.", "id": "i2", "name": "Reimplantação Giga", "status": "wip"}, {"desc": "Monitoramento contínuo da evolução do projeto no Atacadão de Santa Catarina.", "id": "i3", "name": "Acompanhamento Atacadão SC", "status": "wip"}, {"desc": "Acompanhamento intensivo ao longo de fevereiro da evolução em Mato Grosso.", "id": "i4", "name": "Evolução projeto em MT", "status": "wip"}, {"desc": "Desenho do fluxo com TI e follow-up do app de retiradas — iniciado em abr/26.", "id": "i5", "name": "App de retiradas (TI)", "status": "wip"}, {"desc": "Reunião de análise de implantação com cliente Super Adega realizada em mar/26.", "id": "i6", "name": "Análise implantação Super Adega", "status": "wip"}, {"desc": "Reunião de alinhamento entre GQ e logística no CD RJN.", "id": "i7", "name": "Alinhamento GQ e logística CD RJN", "status": "plan"}];
-const CHECKLIST_ROWS=[
+let CHECKLIST_ROWS=[
   {id:'c1',label:'Painel de indicadores atualizado'},
   {id:'c2',label:'Painel enviado ao comercial'},
   {id:'c3',label:'Reunião interna com comercial'},
   {id:'c4',label:'Consolidação de dossiês'},
   {id:'c5',label:'Plano de ação mensal (baseado em dados)'},
 ];
+const DEFAULT_CHECKLIST_ROWS = JSON.parse(JSON.stringify(CHECKLIST_ROWS));
 const CHECKLIST_MONTHS=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 const DEFAULT_CHECKLIST={"c1":["ok","ok","ok","na","na","na","na","na","na","na","na","na"],"c2":["ok","ok","ok","na","na","na","na","na","na","na","na","na"],"c3":["ok:28/jan","no","ok:31/mar","na","na","na","na","na","na","na","na","na"],"c4":["no","ok:05/fev","ok:09/mar","ok:08/abr","na","na","na","na","na","na","na","na"],"c5":["no","ok:06/fev","ok:10/mar","ok:09/abr","na","na","na","na","na","na","na","na"]};
 
@@ -536,6 +539,7 @@ async function save(){
     fbSave('events', events),
     fbSave('initiatives', initiatives),
     fbSave('checklist', checklist),
+    fbSave('checklistRows', CHECKLIST_ROWS),
   ]);
   updateMetrics();
 }
@@ -693,29 +697,77 @@ function deleteEvent(){
 // ── CHECKLIST ──
 function renderChecklist(){
   const t=document.getElementById('checklist-table');
-  let h='<thead><tr><th>Atividade</th>';
-  CHECKLIST_MONTHS.forEach(m=>h+=`<th class="month-col">${m}</th>`);
-  h+='</tr></thead><tbody>';
+  let h='<thead><tr><th style="min-width:220px">Atividade</th>';
+  CHECKLIST_MONTHS.forEach(m=>h+=`<th class="month-col" style="min-width:90px">${m}</th>`);
+  h+='<th style="min-width:50px;text-align:center"></th></tr></thead><tbody>';
   CHECKLIST_ROWS.forEach(row=>{
     h+=`<tr><td class="row-label">${row.label}</td>`;
-    (checklist[row.id]||['na','na','na','na']).forEach((val,mi)=>{
+    const vals = checklist[row.id] || Array(12).fill('na');
+    while(vals.length<12) vals.push('na');
+    vals.forEach((val,mi)=>{
       const type=val.startsWith('ok')?'ok':val==='no'?'no':'na';
       const note=val.includes(':')?val.split(':')[1]:'';
-      const label=type==='ok'?('✓'+(note?' '+note:'')):(type==='no'?'—':'n/a');
-      h+=`<td class="month-col"><span class="cell-${type}" onclick="openCheckModal('${row.id}',${mi})">${label}</span></td>`;
+      const icons={ok:'✓',no:'—',na:'·'};
+      const label=type==='ok'?(icons.ok+(note?' '+note:'')):(type==='no'?icons.no:icons.na);
+      h+=`<td class="month-col"><span class="cell-${type}" onclick="openCheckPicker('${row.id}',${mi})" title="Clique para editar">${label}</span></td>`;
     });
+    h+=`<td style="text-align:center"><button onclick="deleteCheckRow('${row.id}')" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:13px;padding:2px 6px;border-radius:4px" title="Excluir linha" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text3)'">✕</button></td>`;
     h+='</tr>';
   });
-  h+='</tbody>';t.innerHTML=h;
+  h+='</tbody>';
+  t.innerHTML=h;
 }
-function openCheckModal(rowId,mi){
-  const row=CHECKLIST_ROWS.find(r=>r.id===rowId);
+
+// picker visual de status
+let _ckRow=null,_ckMi=null;
+function openCheckPicker(rowId,mi){
+  _ckRow=rowId; _ckMi=mi;
   const cur=(checklist[rowId]||[])[mi]||'na';
-  const val=prompt(`Editar: ${row.label} — ${CHECKLIST_MONTHS[mi]}\n\nok = concluído\nok:28/jan = concluído com nota\nno = não realizado\nna = não aplicável\n\nValor atual: ${cur}\nNovo valor:`,cur);
-  if(val===null)return;
-  if(!checklist[rowId])checklist[rowId]=['na','na','na','na'];
-  checklist[rowId][mi]=val.trim()||'na';
-  save();renderChecklist();toast('Checklist atualizado ✓');
+  const note=cur.includes(':')?cur.split(':')[1]:'';
+  document.getElementById('ck-note').value=note;
+  document.getElementById('ck-ok').classList.toggle('ck-sel',cur.startsWith('ok'));
+  document.getElementById('ck-no').classList.toggle('ck-sel',cur==='no');
+  document.getElementById('ck-na').classList.toggle('ck-sel',cur==='na'||cur==='');
+  document.getElementById('ck-note-wrap').style.display=cur.startsWith('ok')?'flex':'none';
+  document.getElementById('modal-ck').classList.add('open');
+}
+function setCheckStatus(s){
+  document.getElementById('ck-ok').classList.toggle('ck-sel',s==='ok');
+  document.getElementById('ck-no').classList.toggle('ck-sel',s==='no');
+  document.getElementById('ck-na').classList.toggle('ck-sel',s==='na');
+  document.getElementById('ck-note-wrap').style.display=s==='ok'?'flex':'none';
+  _ckPending=s;
+}
+let _ckPending=null;
+function saveCheckPicker(){
+  const s=document.getElementById('ck-ok').classList.contains('ck-sel')?'ok':document.getElementById('ck-no').classList.contains('ck-sel')?'no':'na';
+  const note=document.getElementById('ck-note').value.trim();
+  const val=s==='ok'&&note?'ok:'+note:s;
+  if(!checklist[_ckRow])checklist[_ckRow]=Array(12).fill('na');
+  while(checklist[_ckRow].length<12)checklist[_ckRow].push('na');
+  checklist[_ckRow][_ckMi]=val;
+  save();renderChecklist();
+  document.getElementById('modal-ck').classList.remove('open');
+  toast('Checklist atualizado ✓');
+}
+
+function deleteCheckRow(rowId){
+  if(!confirm('Excluir esta linha do checklist?'))return;
+  CHECKLIST_ROWS=CHECKLIST_ROWS.filter(r=>r.id!==rowId);
+  delete checklist[rowId];
+  save();renderChecklist();toast('Linha excluída');
+}
+
+function addCheckRow(){
+  const label=document.getElementById('ck-new-label').value.trim();
+  if(!label)return;
+  const id='ck'+Date.now();
+  CHECKLIST_ROWS.push({id,label});
+  checklist[id]=Array(12).fill('na');
+  save();renderChecklist();
+  document.getElementById('ck-new-label').value='';
+  document.getElementById('modal-add-ck').classList.remove('open');
+  toast('Linha adicionada ✓');
 }
 
 // ── INICIATIVAS ──
@@ -1020,7 +1072,7 @@ function hideMapTip(){const t=document.getElementById('mapa-tooltip');if(t)t.sty
 Object.assign(window,{
   switchSection,openEventModal,closeEventModal,saveEvent,deleteEvent,
   toggleClientFields,toggleFollowupDate,
-  openCheckModal,renderChecklist,
+  openCheckPicker,setCheckStatus,saveCheckPicker,deleteCheckRow,addCheckRow,
   openIniModal,closeIniModal,saveIni,deleteIni,
   renderFollowups,renderVisitas,
   openDrilldown,closeDrawer,
@@ -1034,20 +1086,21 @@ async function init(){
   document.body.insertAdjacentHTML('afterbegin','<div id="fb-loading" style="position:fixed;inset:0;background:var(--navy);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:16px"><div style="width:40px;height:40px;border:3px solid rgba(255,255,255,0.2);border-top-color:#fff;border-radius:50%;animation:spin 0.8s linear infinite"></div><div style="color:#fff;font-size:14px;font-family:DM Sans,sans-serif">Carregando dados...</div></div><style>@keyframes spin{to{transform:rotate(360deg)}}</style>');
 
   try {
-    const [ev, ini, ck] = await Promise.all([
+    const [ev, ini, ck, ckRows] = await Promise.all([
       fbLoad('events'),
       fbLoad('initiatives'),
       fbLoad('checklist'),
+      fbLoad('checklistRows'),
     ]);
     if(ev)  events      = Array.isArray(ev)  ? ev  : Object.values(ev);
     if(ini) initiatives = Array.isArray(ini) ? ini : Object.values(ini);
     if(ck){
       checklist = ck;
-      // garante 12 meses em cada linha
       Object.keys(checklist).forEach(k=>{
         while(checklist[k].length < 12) checklist[k].push('na');
       });
     }
+    if(ckRows) CHECKLIST_ROWS = Array.isArray(ckRows) ? ckRows : Object.values(ckRows);
   } catch(e) {
     console.warn('Firebase load error, using defaults:', e);
   }
@@ -1057,5 +1110,40 @@ async function init(){
 }
 init();
 </script>
+<!-- MODAL CHECKLIST STATUS PICKER -->
+<div class="modal-overlay" id="modal-ck">
+  <div class="modal" style="max-width:340px">
+    <div class="modal-title"><span>Atualizar status</span></div>
+    <div style="display:flex;gap:8px;margin-bottom:14px">
+      <button id="ck-ok" onclick="setCheckStatus('ok')" style="flex:1;padding:10px;border-radius:8px;border:2px solid var(--border2);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;background:#e8eef8;color:var(--navy);transition:all .15s">✓ Concluído</button>
+      <button id="ck-no" onclick="setCheckStatus('no')" style="flex:1;padding:10px;border-radius:8px;border:2px solid var(--border2);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;background:#fdecea;color:var(--red);transition:all .15s">— Não realizado</button>
+      <button id="ck-na" onclick="setCheckStatus('na')" style="flex:1;padding:10px;border-radius:8px;border:2px solid var(--border2);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;background:var(--surface2);color:var(--text3);transition:all .15s">· N/A</button>
+    </div>
+    <div id="ck-note-wrap" style="display:none;align-items:center;gap:8px;margin-bottom:14px">
+      <label style="font-size:12px;color:var(--text2);white-space:nowrap">Nota (ex: 28/jan)</label>
+      <input type="text" id="ck-note" class="form-input" placeholder="opcional" style="flex:1">
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="document.getElementById('modal-ck').classList.remove('open')">Cancelar</button>
+      <button class="btn-save" onclick="saveCheckPicker()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ADD CHECKLIST ROW -->
+<div class="modal-overlay" id="modal-add-ck">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-title"><span>Nova linha no checklist</span></div>
+    <div class="form-group">
+      <label class="form-label">Nome da atividade</label>
+      <input type="text" class="form-input" id="ck-new-label" placeholder="Ex: Envio de relatório mensal">
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="document.getElementById('modal-add-ck').classList.remove('open')">Cancelar</button>
+      <button class="btn-save" onclick="addCheckRow()">Adicionar</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
